@@ -1,0 +1,86 @@
+# import requests
+
+portnum = 8785
+url = f"http://localhost:{portnum}/"
+varFile = "variables.txt"
+vars = []
+lines = []
+with open(varFile, "r") as f:
+    lines = f.readlines()
+
+for line in lines:
+    if line[0] != "":
+        vars.append(line.strip("\n"))
+
+translations = {
+    "CORE_STATE": {
+        "NOREACTIVO": "NOT_REACTIVE",
+        "REACTIVO": "REACTIVE"
+    },
+    "CORE_STATE_CRITICALITY": {
+        "SUBCRITICO": "SUBCRITICAL",
+        "CRITICO": "CRITICAL"
+    },
+    "COOLANT_CORE_STATE": {
+        "INMOVIL": "IMMOBILE",
+        "CIRCULANDO": "CIRCULATING"
+    },
+    "COOLANT_CORE_CIRCULATION_PUMP_0_STATUS": {
+        "0": "NOT_ACTIVE",
+        "1": "ACTIVE_AND_NOT_REACHED_SET_VELOCITY",
+        "2": "ACTIVE_AND_REACHED_SET_VELOCITY",
+        "3": "ACTIVE_AND_REQUIRES_MAINTENANCE",
+        "4": "INACTIVE_OR_NOT_OPERATIONAL",
+        "5": "ACTIVATION_REQUESTED_BUT_INSUFFICIENT_POWER"
+    },
+    "COOLANT_CORE_CIRCULATION_PUMP_1_STATUS": {
+        "0": "NOT_ACTIVE",
+        "1": "ACTIVE_AND_NOT_REACHED_SET_VELOCITY",
+        "2": "ACTIVE_AND_REACHED_SET_VELOCITY",
+        "3": "ACTIVE_AND_REQUIRES_MAINTENANCE",
+        "4": "INACTIVE_OR_NOT_OPERATIONAL",
+        "5": "ACTIVATION_REQUESTED_BUT_INSUFFICIENT_POWER"
+    },
+    "COOLANT_CORE_CIRCULATION_PUMP_2_STATUS": {
+        "0": "NOT_ACTIVE",
+        "1": "ACTIVE_AND_NOT_REACHED_SET_VELOCITY",
+        "2": "ACTIVE_AND_REACHED_SET_VELOCITY",
+        "3": "ACTIVE_AND_REQUIRES_MAINTENANCE",
+        "4": "INACTIVE_OR_NOT_OPERATIONAL",
+        "5": "ACTIVATION_REQUESTED_BUT_INSUFFICIENT_POWER"
+    },
+    "COOLANT_CORE_CIRCULATION_PUMP_0_DRY_STATUS": {
+        "1": "ACTIVE_AND_DRY",
+        "4": "INACTIVE_OR_NOT_OPERATIONAL_OR_MAINTENANCE_REQUIRED"
+    },
+    "COOLANT_CORE_CIRCULATION_PUMP_1_DRY_STATUS": {
+        "1": "ACTIVE_AND_DRY",
+        "4": "INACTIVE_OR_NOT_OPERATIONAL_OR_MAINTENANCE_REQUIRED"
+    },
+    "COOLANT_CORE_CIRCULATION_PUMP_2_DRY_STATUS": {
+        "1": "ACTIVE_AND_DRY",
+        "4": "INACTIVE_OR_NOT_OPERATIONAL_OR_MAINTENANCE_REQUIRED"
+    },
+    "COOLANT_CORE_CIRCULATION_PUMP_0_OVERLOAD_STATUS": {
+        "1": "ACTIVE_AND_OVERLOADED",
+        "4": "INACTIVE_OR_NOT_OPERATIONAL_OR_MAINTENANCE_REQUIRED"
+    },
+    "COOLANT_CORE_CIRCULATION_PUMP_1_OVERLOAD_STATUS": {
+        "1": "ACTIVE_AND_OVERLOADED",
+        "4": "INACTIVE_OR_NOT_OPERATIONAL_OR_MAINTENANCE_REQUIRED"
+    },
+    "COOLANT_CORE_CIRCULATION_PUMP_2_OVERLOAD_STATUS": {
+        "1": "ACTIVE_AND_OVERLOADED",
+        "4": "INACTIVE_OR_NOT_OPERATIONAL_OR_MAINTENANCE_REQUIRED"
+    },
+    "RODS_STATUS": {
+        "INMOVIL": "IMMOBILE",
+        "AJUSTANDO": "ADJUSTING"
+    }
+}
+
+
+def read_variable(variable):
+    params = {"Variable": variable}
+    response = requests.get(f"{url}", params=params)
+    return response.text
