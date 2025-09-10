@@ -1,5 +1,12 @@
 import read_variables
+from reactor import *
+# from tkinter import *
 
 
 if __name__ == "__main__":
-    print(read_variables.vars)
+    react = Reactor()
+
+    
+
+
+
