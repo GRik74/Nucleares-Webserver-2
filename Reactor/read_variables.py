@@ -1,5 +1,7 @@
 import requests
 
+
+
 def get_vars():
     varFile = "Reactor/variables.txt"
     vars = []
@@ -87,7 +89,7 @@ def get_vars():
         }
     }
 
-    return vars, commands, translations
+    return vars, translations, commands
 
 
 def read_variable(url, variable):
@@ -100,13 +102,12 @@ def read_variable(url, variable):
     except requests.RequestException as e:
         return f"Request Error - {e}"
 
-def translate_variable(var, result):
-    if var in self.translations.keys():
+def translate_variable(var, result, translations):
+    if var in translations.keys():
         try:
-            return self.translations[var][result]
+            return translations[var][result]
         except KeyError as e:
             # print(f"Error translating variable: {var} with value: {result}")
             return result
     else:
         return result
-fnmatch
