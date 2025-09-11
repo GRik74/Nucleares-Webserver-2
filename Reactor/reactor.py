@@ -10,7 +10,6 @@ class Reactor:
     def __init__(self):
         self.varList, self.translations, self.commands = read_variables.get_vars()
         self.data = {}
-        self.update_vars()
 
         self.time = ''
         self.timeStamp = ''
@@ -21,6 +20,8 @@ class Reactor:
         self.externalReservoir = 0
         self.numPrimaryPumps = 0
         self.numFreightPumps = 0
+
+        self.update_vars()
 
 
     def update_vars(self):
@@ -37,18 +38,18 @@ class Reactor:
             self.time = data['TIME']
             self.timeStamp = data['TIME_STAMP']
             self.day = data['TIME_DAY']
-            self.externalReservoir = float(data['CORE_EXTERNAL_COOLANT_RESERVOIR_VOLUME'])
-            self.numPrimaryPumps = int(data['COOLANT_CORE_QUANTITY_CIRCULATION_PUMPS_PRESENT'])
-            self.numFreightPumps = int(data['COOLANT_CORE_QUANTITY_FREIGHT_PUMPS_PRESENT'])
-            self.maxPotentialPower = float(data['POWER_MAX_THEORETICAL_FINAL_PLANT_OUTPUT_M)W'])
+            self.externalReservoir = data['CORE_EXTERNAL_COOLANT_RESERVOIR_VOLUME']
+            self.numPrimaryPumps = data['COOLANT_CORE_QUANTITY_CIRCULATION_PUMPS_PRESENT']
+            self.numFreightPumps = data['COOLANT_CORE_QUANTITY_FREIGHT_PUMPS_PRESENT']
+            self.maxPotentialPower = data['POWER_MAX_THEORETICAL_FINAL_PLANT_OUTPUT_MW']
 
             self.core.update_core(data)
             
 
         except TypeError as e:
-            error = input(f"Error updating {e.args[0]} - incorrect type. Press enter to continue.")
+            print(f"Error updating {e.args[0]} - incorrect type. Press enter to continue.")
         except KeyError as e:
-            error = input(f"Error updating {e.args[0]} - doesn't exist in reactor data. Press enter to continue.")
+            print(f"Error updating {e.args[0]} - doesn't exist in reactor data. Press enter to continue.")
 
 
 
@@ -82,23 +83,23 @@ class Core:
     
     def update_core(self, data):
 
-        self.TempCurrent = float(data['CORE_TEMP'])
-        self.TempOperative = float(data['CORE_TEMP_OPERATIVE'])
-        self.TempMax = float(data['CORE_TEMP_MAX'])
-        self.TempResidual = float(data['CORE_TEMP_RESIDUAL'])
+        self.TempCurrent = data['CORE_TEMP']
+        self.TempOperative = data['CORE_TEMP_OPERATIVE']
+        self.TempMax = data['CORE_TEMP_MAX']
+        self.TempResidual = data['CORE_TEMP_RESIDUAL']
 
-        self.PressCurrent = float(data['CORE_PRESSURE'])
-        self.PressOperative = float(data['CORE_PRESSURE_OPERATIVE'])
-        self.PressMax = float(data['CORE_PRESSURE_MAX'])
+        self.PressCurrent = data['CORE_PRESSURE']
+        self.PressOperative = data['CORE_PRESSURE_OPERATIVE']
+        self.PressMax = data['CORE_PRESSURE_MAX']
 
-        self.Integrity = float(data['CORE_INTEGRITY'])
-        self.Wear = float(data['CORE_WEAR'])
+        self.Integrity = data['CORE_INTEGRITY']
+        self.Wear = data['CORE_WEAR']
         self.State = data['CORE_STATE']
         self.ImminentFusion = True if data['CORE_IMMINENT_FUSION'] == 'TRUE' else False
         self.ReadyStart = True if data['CORE_READY_FOR_START'] == 'TRUE' else False
         self.SteamPresent = True if data['CORE_STEAM_PRESENT'] == 'TRUE' else False
         self.HighSteam = True if data['CORE_HIGH_STEAM_PRESENT'] == 'TRUE' else False
-        self.CoreDelta = float(data['CORE_FACTOR_CHANGE'])
+        self.CoreDelta = data['CORE_FACTOR_CHANGE']
 
         self.rods.update_rods(data)
         self.coreCoolant.update_CoreCoolant(data)
@@ -124,16 +125,16 @@ class Rods:
     
     def update_rods(self, data):
         self.status = data['RODS_STATUS']
-        self.moveSpeed = float(data['RODS_MOVEMENT_SPEED'])
+        self.moveSpeed = data['RODS_MOVEMENT_SPEED']
         self.speedDecreased = True if data['RODS_MOVEMENT_SPEED_DECREASED_HIGH_TEMPERATURE'] == 'TRUE' else False
         self.deformed = True if data['RODS_DEFORMED'] == 'TRUE' else False
-        self.tempCurrent = float(data['RODS_TEMPERATURE'])
-        self.tempMax = float(data['RODS_MAX_TEMPERATURE'])
-        self.orderedPosition = float(data['RODS_POS_ORDERED'])
-        self.actualPosition = float(data['RODS_POS_ACTUAL'])
+        self.tempCurrent = data['RODS_TEMPERATURE']
+        self.tempMax = data['RODS_MAX_TEMPERATURE']
+        self.orderedPosition = data['RODS_POS_ORDERED']
+        self.actualPosition = data['RODS_POS_ACTUAL']
         self.positionReached = True if data['RODS_POS_REACHED'] == 'TRUE' else False
-        self.rodCount = int(data['RODS_QUANTITY'])
-        self.rodsAligned = float(data['RODS_ALIGNED'])
+        self.rodCount = data['RODS_QUANTITY']
+        self.rodsAligned = data['RODS_ALIGNED']
 
 
 class CoreCoolant:
@@ -162,17 +163,17 @@ class CoreCoolant:
     
     def update_CoreCoolant(self, data):
         self.state = data['COOLANT_CORE_STATE']
-        self.pressCurrent = float(data['COOLANT_CORE_PRESSURE'])
-        self.pressMax = float(data['COOLANT_CORE_MAX_PRESSURE'])
-        self.temp = float(data['COOLANT_CORE_VESSEL_TEMPERATURE'])
-        self.vesselLevel = float(data['COOLANT_CORE_QUANTITY_IN_VESSEL'])
-        self.primaryLoopLevel = float(data['COOLANT_CORE_PRIMARY_LOOP_LEVEL'])
-        self.flowSpeed = float(data['COOLANT_CORE_FLOW_SPEED'])
-        self.orderedSpeed = float(data['COOLANT_CORE_FLOW_ORDERED_SPEED'])
-        self.speedReached = True if data['COOLANT_CORE_FLOW_SPEED_REACHED'] == 'TRUE' else False
-        self.flowIn = float(data['COOLANT_CORE_FLOW_IN'])
-        self.flowOut = float(data['COOLANT_CORE_FLOW_OUT'])
-        self.feedwaterTankLevel = float(data['CORE_PRIMARY_CIRCUIT_COOLING_TANK_VOLUME'])
+        self.pressCurrent = data['COOLANT_CORE_PRESSURE']
+        self.pressMax = data['COOLANT_CORE_MAX_PRESSURE']
+        self.temp = data['COOLANT_CORE_VESSEL_TEMPERATURE']
+        self.vesselLevel = data['COOLANT_CORE_QUANTITY_IN_VESSEL']
+        self.primaryLoopLevel = data['COOLANT_CORE_PRIMARY_LOOP_LEVEL']
+        self.flowSpeed = data['COOLANT_CORE_FLOW_SPEED']
+        self.orderedSpeed = data['COOLANT_CORE_FLOW_ORDERED_SPEED']
+        # self.speedReached = True if data['COOLANT_CORE_FLOW_SPEED_REACHED'] == 'TRUE' else False
+        self.flowIn = data['COOLANT_CORE_FLOW_IN']
+        self.flowOut = data['COOLANT_CORE_FLOW_OUT']
+        self.feedwaterTankLevel = data['CORE_PRIMARY_CIRCUIT_COOLING_TANK_VOLUME']
 
         self.chem.update_Chemical(data)
         
@@ -209,9 +210,9 @@ class SteamTurbine:
         self.pressure = 0
 
     def update_SteamTurbine(self, data):
-        self.rpm = int(data[f"STEAM_TURBINE_{self.loopNum}_RPM"])
-        self.temp = float(data[f"STEAM_TURBINE_{self.loopNum}_TEMPERATURE"])
-        self.pressure = float(data[f"STEAM_TURBINE_{self.loopNum}_PRESSURE"])
+        self.rpm = data[f"STEAM_TURBINE_{self.loopNum}_RPM"]
+        self.temp = data[f"STEAM_TURBINE_{self.loopNum}_TEMPERATURE"]
+        self.pressure = data[f"STEAM_TURBINE_{self.loopNum}_PRESSURE"]
 
 
 class ElectricTurbine:
@@ -227,11 +228,11 @@ class ElectricTurbine:
         self.breaker = ""
 
     def update_ElectricTurbine(self, data):
-        self.powerKW = int(data[f"GENERATOR_{self.loopNum}_KW"])
+        self.powerKW = data[f"GENERATOR_{self.loopNum}_KW"]
         self.powerMW = self.powerKW/1000
-        self.voltage = int(data[f"GENERATOR_{self.loopNum}_V"])
-        self.amps = float(data[f"GENERATOR_{self.loopNum}_A"])
-        self.freq = float(data[f"GENERATOR_{self.loopNum}_HERTZ"])
+        self.voltage = data[f"GENERATOR_{self.loopNum}_V"]
+        self.amps = data[f"GENERATOR_{self.loopNum}_A"]
+        self.freq = data[f"GENERATOR_{self.loopNum}_HERTZ"]
         self.breaker = "Closed" if data[f"GENERATOR_{self.loopNum}_BREAKER"] == 'FALSE' else "OPEN"
 
 
@@ -248,7 +249,7 @@ class CoolantLoop:
 
     
     def update_CoolantLoop(self, data):
-        self.ReturnFlow = float(data[f"STEAM_GEN_{self.loopNum}_RETURN_FLOW_PLUS_CONDENSED"])
+        self.ReturnFlow = data[f"STEAM_GEN_{self.loopNum}_RETURN_FLOW_PLUS_CONDENSED"]
 
         self.PrimaryPump.update_CircPump(data)
         self.SecPump.update_CircPump(data)
@@ -278,8 +279,8 @@ class CircPump:
             self.Status = data[f"COOLANT_CORE_CIRCULATION_PUMP_{self.loopNum}_STATUS"]
             self.Dry = True if data[f"COOLANT_CORE_CIRCULATION_PUMP_{self.loopNum}_DRY_STATUS"] == "ACTIVE_AND_DRY" else False
             self.Overload = True if data[f"COOLANT_CORE_CIRCULATION_PUMP_{self.loopNum}_OVERLOAD_STATUS"] == "ACTIVE_AND_OVERLOADED" else False
-            self.OrderedSpeed = float(data[f"COOLANT_CORE_CIRCULATION_PUMP_{self.loopNum}_ORDER_SPEED"])
-            self.ActualSpeed = float(data[f"COOLANT_CORE_CIRCULATION_PUMP_{self.loopNum}_SPEED"])
+            self.OrderedSpeed = data[f"COOLANT_CORE_CIRCULATION_PUMP_{self.loopNum}_ORDER_SPEED"]
+            self.ActualSpeed = data[f"COOLANT_CORE_CIRCULATION_PUMP_{self.loopNum}_SPEED"]
             self.Capacity = data[f"COOLANT_CORE_CIRCULATION_PUMP_{self.loopNum}_CAPACITY"]
         else:
             self.Capacity = data[f"COOLANT_SEC_CIRCULATION_PUMP_{self.loopNum}_CAPACITY"]

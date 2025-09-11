@@ -19,7 +19,6 @@ def get_vars():
             else:
                 vars.append(line.strip("\n"))
         elif line.strip(" ")[0] == "#":
-            print("Found commands")
             found_commands = True
 
     translations = {
