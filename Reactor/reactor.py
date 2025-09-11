@@ -28,7 +28,7 @@ class Reactor:
         for var in self.varList:
             holder = read_variables.read_variable(url, var)
             if not fnmatch(holder, "*Error*"):
-                self.data[var] = read_variables.translate_variable(var, holder)
+                self.data[var] = read_variables.translate_variable(var, holder, self.translations)
             else:
                 self.data[var] = holder
 
@@ -38,17 +38,17 @@ class Reactor:
             self.timeStamp = data['TIME_STAMP']
             self.day = data['TIME_DAY']
             self.externalReservoir = float(data['CORE_EXTERNAL_COOLANT_RESERVOIR_VOLUME'])
-            self.numPrimaryPumps = data['COOLANT_CORE_QUANTITY_CIRCULATION_PUMPS_PRESENT']
-            self.numFreightPumps = data['COOLANT_CORE_QUANTITY_FREIGHT_PUMPS_PRESENT']
-            self.maxPotentialPower = data['POWER_MAX_THEORETICAL_FINAL_PLANT_OUTPUT_MW']
+            self.numPrimaryPumps = int(data['COOLANT_CORE_QUANTITY_CIRCULATION_PUMPS_PRESENT'])
+            self.numFreightPumps = int(data['COOLANT_CORE_QUANTITY_FREIGHT_PUMPS_PRESENT'])
+            self.maxPotentialPower = float(data['POWER_MAX_THEORETICAL_FINAL_PLANT_OUTPUT_M)W'])
 
             self.core.update_core(data)
             
 
         except TypeError as e:
-            print(f"Error updating {e.args[0]} - incorrect type.")
+            error = input(f"Error updating {e.args[0]} - incorrect type. Press enter to continue.")
         except KeyError as e:
-            print(f"Error updating {e.args[0]} - doesn't exist in reactor data.")
+            error = input(f"Error updating {e.args[0]} - doesn't exist in reactor data. Press enter to continue.")
 
 
 
@@ -78,8 +78,6 @@ class Core:
 
         self.rods = Rods()
         self.coreCoolant = CoreCoolant()
-
-        self.chem = {'DoseOrd': 0, 'DoseAct': 0, 'FiltOrd': 0, 'FiltAct': 0, 'BoronPPM': 0}
 
     
     def update_core(self, data):
