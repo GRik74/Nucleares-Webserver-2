@@ -3,7 +3,7 @@ import requests
 
 
 def get_vars():
-    varFile = "Reactor/variables.txt"
+    varFile = "C:/Users/rikar/Documents/GitHub/Nucleares-Webserver-2/Nucleares-Webserver-2/Reactor/variables.txt"
     vars = []
     commands = []
     lines = []
