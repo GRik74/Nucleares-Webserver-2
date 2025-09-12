@@ -279,7 +279,7 @@ class CircPump:
             self.Status = data[f"COOLANT_CORE_CIRCULATION_PUMP_{self.loopNum}_STATUS"]
             self.Dry = True if data[f"COOLANT_CORE_CIRCULATION_PUMP_{self.loopNum}_DRY_STATUS"] == "ACTIVE_AND_DRY" else False
             self.Overload = True if data[f"COOLANT_CORE_CIRCULATION_PUMP_{self.loopNum}_OVERLOAD_STATUS"] == "ACTIVE_AND_OVERLOADED" else False
-            self.OrderedSpeed = data[f"COOLANT_CORE_CIRCULATION_PUMP_{self.loopNum}_ORDER_SPEED"]
+            self.OrderedSpeed = data[f"COOLANT_CORE_CIRCULATION_PUMP_{self.loopNum}_ORDERED_SPEED"]
             self.ActualSpeed = data[f"COOLANT_CORE_CIRCULATION_PUMP_{self.loopNum}_SPEED"]
             self.Capacity = data[f"COOLANT_CORE_CIRCULATION_PUMP_{self.loopNum}_CAPACITY"]
         else:
