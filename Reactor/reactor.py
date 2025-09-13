@@ -34,7 +34,7 @@ class Reactor:
                 self.data[var] = holder
 
             if self.data[var] == "" or self.data[var] == " ": self.data[var] = None
-            
+
 
         data = self.data
         try:
@@ -236,7 +236,7 @@ class ElectricTurbine:
         self.voltage = data[f"GENERATOR_{self.loopNum}_V"]
         self.amps = data[f"GENERATOR_{self.loopNum}_A"]
         self.freq = data[f"GENERATOR_{self.loopNum}_HERTZ"]
-        self.breaker = "Closed" if data[f"GENERATOR_{self.loopNum}_BREAKER"] == 'FALSE' else "OPEN"
+        self.breaker = "Closed" if data[f"GENERATOR_{self.loopNum}_BREAKER"] == 'FALSE' else "Open"
 
 
 class CoolantLoop:

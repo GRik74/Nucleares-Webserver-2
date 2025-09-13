@@ -56,6 +56,7 @@ if __name__ == "__main__":
         # print(f"External Reservoir Level:            {react.externalReservoir}")
 
         print("\n")
+        core = react.core
         print("---------------------  Reactor Core  -------------------------")
         print(f"Core State:                          {react.core.State}")
 
@@ -96,24 +97,72 @@ if __name__ == "__main__":
 
 
         print('\n')
+        coolant = react.core.coreCoolant
         print("---------------------  Reactor Coolant  ----------------------")
 
-        print(f"Coolant State:                       {react.core.coreCoolant.state}")
-        print(f"Coolant Temp:                        {round(float(react.core.coreCoolant.temp), 2)}")
-        print(f"Coolant Pressure:                    {round(float(react.core.coreCoolant.pressCurrent))}" + '\n')
+        print(f"Coolant State:                       {coolant.state}")
+        print(f"Coolant Temp:                        {round(float(coolant.temp), 2)}")
+        print(f"Coolant Pressure:                    {round(float(coolant.pressCurrent))}" + '\n')
 
         # print(f"Vessel Level:                        {round(float(react.core.coreCoolant.vesselLevel), 0)}")
         if float(react.core.coreCoolant.primaryLoopLevel) < 99.0: print(f"Primary Loop Level:                  {round(float(react.core.coreCoolant.primaryLoopLevel))}" + '\n')
         
-        print(f"Coolant Flow Speed:                  {round(float(react.core.coreCoolant.flowSpeed), 0)}")
-        if float(react.core.coreCoolant.flowIn) != float(react.core.coreCoolant.flowOut):
+        print(f"Coolant Flow Speed:                  {round(float(coolant.flowSpeed), 0)}")
+        if float(coolant.flowIn) != float(coolant.flowOut):
             print(f"     ************ WARNING *************\n\n***** Core In-Flow <> Out-Flow Differential *****")
-            print(f"\tCoolant In-Flow:                     {round(float(react.core.coreCoolant.flowIn), 0)}")
-            print(f"\tCoolant Out-Flow                     {round(float(react.core.coreCoolant.flowOut), 0)}")
+            print(f"\tCoolant In-Flow:                     {round(float(coolant.flowIn), 0)}")
+            print(f"\tCoolant Out-Flow                     {round(float(coolant.flowOut), 0)}")
 
 
         print('\n')
+        TurbineA = coolant.LoopA.steamTurbine
+        TurbineB = coolant.LoopB.steamTurbine
+        TurbineC = coolant.LoopC.steamTurbine
+
+        GenA = coolant.LoopA.elecTurbine
+        GenB = coolant.LoopB.elecTurbine
+        GenC = coolant.LoopC.elecTurbine
         print("---------------------  Generator Status  ----------------------")
+
+        print("  ----- Steam Turbines -----  ")
+
+        if float(TurbineA.rpm) > 1:
+            print(f"Steam Turbine A:")
+            print(f"    RPM:                 {TurbineA.rpm}")
+            print(f"    Temp:                {TurbineA.temp}")
+            print(f"    Pressure:            {TurbineA.pressure}")
+
+        if float(TurbineB.rpm) > 1:
+            print(f"Steam Turbine B:")
+            print(f"    RPM:                 {TurbineB.rpm}")
+            print(f"    Temp:                {TurbineB.temp}")
+            print(f"    Pressure:            {TurbineB.pressure}")
+
+        if float(TurbineC.rpm) > 1:
+            print(f"Steam Turbine C:")
+            print(f"    RPM:                 {TurbineC.rpm}")
+            print(f"    Temp:                {TurbineC.temp}")
+            print(f"    Pressure:            {TurbineC.pressure}")
+
+        print("\n  ----- Generators -----  ")
+
+        if float(GenA.powerKW) > 0:
+            print(f"Generator A: Breaker {GenA.breaker}")
+            print(f"    Power:                ", end="")
+            print(GenA.powerKW + " kilowatts") if float(GenA.powerKW) < 1000 else print(GenA.powerMW + " megawatts")
+            print(f"    Voltage:              {GenA.voltage}v")
+
+        if float(GenB.powerKW) > 0:
+            print(f"Generator B: Breaker {GenB.breaker}")
+            print(f"    Power:                ", end="")
+            print(GenB.powerKW + " kilowatts") if float(GenB.powerKW) < 1000 else print(GenB.powerMW + " megawatts")
+            print(f"    Voltage:              {GenB.voltage}v")
+
+        if float(GenC.powerKW) > 0:
+            print(f"Generator C: Breaker {GenC.breaker}")
+            print(f"    Power:                ", end="")
+            print(GenC.powerKW + " kilowatts") if float(GenC.powerKW) < 1000 else print(GenC.powerMW + " megawatts")
+            print(f"    Voltage:              {GenC.voltage}v")
 
 
         time.sleep(5)
