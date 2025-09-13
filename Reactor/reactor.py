@@ -33,6 +33,9 @@ class Reactor:
             else:
                 self.data[var] = holder
 
+            if self.data[var] == "" or self.data[var] == " ": self.data[var] = None
+            
+
         data = self.data
         try:
             self.time = data['TIME']
